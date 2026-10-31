@@ -10,7 +10,7 @@
     "build:electron": "tsc -p electron/tsconfig.json",
     "start:electron": "npm run build:electron && electron .",
     "dev": "concurrently \"npm run dev:next\" \"wait-on http://localhost:3000 && npm run start:electron\"",
-    "build": "npm run build"
+    "build": "next build"
   },
   "dependencies": {
     "@mantine/core": "^9.7.4",
