@@ -28,6 +28,9 @@ interface Section1Props {
   setProjectName: (val: string) => void;
   lpoNoInput: string;
   setLpoNoInput: (val: string) => void;
+  revisionReason?: string;
+  setRevisionReason?: (val: string) => void;
+  isRevision?: boolean;
   dbSuppliers: SupplierDbItem[];
   handleSupplierSelect: (val: string) => void;
   onNext: () => void;
