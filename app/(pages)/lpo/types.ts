@@ -25,6 +25,7 @@ export interface LpoData {
   subtotal?: number;
   vat?: number;
   total?: number;
+  revisionReason?: string;
   items: RequestItem[];
 }
 
