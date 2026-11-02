@@ -15,12 +15,13 @@ import {
   Center,
   Stepper,
   Modal,
+  TextInput,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowLeft, IconAlertCircle } from '@tabler/icons-react';
 import { doc, getDoc, updateDoc, collection, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { RequestItem, LpoData, SupplierDbItem, AluDbInfo } from '@/app/(pages)/lpo/types';
+import { RequestItem, LpoData, SupplierDbItem, AluDbInfo } from '../create/types';
 import { Section1SupplierInfo, Section2ItemsPricing, Section3ReviewSummary } from '@/components/LpoSteps';
 
 function LpoReviseContent() {
@@ -46,8 +47,8 @@ function LpoReviseContent() {
   const [supplierName, setSupplierName] = useState('');
   const [supplierTrn, setSupplierTrn] = useState('');
   const [lpoNoInput, setLpoNoInput] = useState('');
+  const [revisionNoInput, setRevisionNoInput] = useState(''); // <-- REVISION NO FIELD PLACED AT THE TOP
   const [projectName, setProjectName] = useState('');
-  const [revisionReason, setRevisionReason] = useState('');
   
   const [orderQuantities, setOrderQuantities] = useState<{ [index: number]: number }>({});
   const [itemPrices, setItemPrices] = useState<{ [index: number]: number }>({});
@@ -100,6 +101,7 @@ function LpoReviseContent() {
         
         const revisedNo = `${baseNo}-R${nextRevNum}`;
         setLpoNoInput(revisedNo);
+        setRevisionNoInput(`Rev-${nextRevNum}`);
         
         const initialQtys: { [index: number]: number } = {};
         const initialPrices: { [index: number]: number } = {};
@@ -165,12 +167,12 @@ function LpoReviseContent() {
   const { subtotal, vat, total } = calculateTotals();
   
   const validateSection1 = useCallback(() => {
-    if (!supplierName.trim() || !supplierTrn.trim() || !projectName.trim() || !lpoNoInput.trim() || !revisionReason.trim()) {
-      triggerError('Incomplete Details', 'Please fill out all fields in Section 1 including the Revision Reason/Notes.');
+    if (!supplierName.trim() || !supplierTrn.trim() || !projectName.trim() || !lpoNoInput.trim()) {
+      triggerError('Incomplete Details', 'Please make sure all fields in Section 1 are filled out.');
       return false;
     }
     return true;
-  }, [supplierName, supplierTrn, projectName, lpoNoInput, revisionReason, triggerError]);
+  }, [supplierName, supplierTrn, projectName, lpoNoInput, triggerError]);
 
   const validateSection2 = useCallback(() => {
     if (!data || !data.items) return false;
@@ -221,9 +223,9 @@ function LpoReviseContent() {
 
       await updateDoc(doc(db, 'lpos', lpoId), {
         lpoNo: lpoNoInput,
+        revisionNo: revisionNoInput,
         supplierName,
         supplierTrn,
-        revisionReason,
         subtotal,
         vat,
         total,
@@ -251,7 +253,7 @@ function LpoReviseContent() {
               <ActionIcon variant="subtle" color="gray" disabled={submitting} onClick={() => router.push('/lpo')}><IconArrowLeft size={18} /></ActionIcon>
               <div>
                 <Title order={3}>Revise LPO: {lpoNoInput}</Title>
-                <Text size="xs" c="dimmed">Project: {projectName} | Revision Workflow</Text>
+                <Text size="xs" c="dimmed">Project: {projectName} | Revision Code: {revisionNoInput}</Text>
               </div>
             </Group>
             <Button variant="default" disabled={submitting} onClick={() => router.push('/lpo')}>Cancel</Button>
@@ -266,29 +268,39 @@ function LpoReviseContent() {
             }
             setActiveStep(step);
           }} color="myColor" size="sm">
-            <Stepper.Step label="Section 1" description="Supplier & Revision Reason" />
+            <Stepper.Step label="Section 1" description="Supplier & Details" />
             <Stepper.Step label="Section 2" description="Items & Pricing" />
             <Stepper.Step label="Section 3" description="Review & Summary" />
           </Stepper>
         </Paper>
         
         {activeStep === 0 && (
-          <Section1SupplierInfo
-            supplierName={supplierName}
-            setSupplierName={setSupplierName}
-            supplierTrn={supplierTrn}
-            setSupplierTrn={setSupplierTrn}
-            projectName={projectName}
-            setProjectName={setProjectName}
-            lpoNoInput={lpoNoInput}
-            setLpoNoInput={setLpoNoInput}
-            revisionReason={revisionReason}
-            setRevisionReason={setRevisionReason}
-            isRevision={true}
-            dbSuppliers={dbSuppliers}
-            handleSupplierSelect={handleSupplierSelect}
-            onNext={() => { if (validateSection1()) setActiveStep(1); }}
-          />
+          <Stack gap="md">
+            {/* Revision Number Field Placed At The Top */}
+            <Paper p="md" radius="md" withBorder style={{ backgroundColor: 'var(--mantine-color-body)' }}>
+              <TextInput
+                label="Revision Tracking No"
+                description="Auto-generated revision cycle label"
+                value={revisionNoInput}
+                onChange={(e) => setRevisionNoInput(e.target.value)}
+                required
+              />
+            </Paper>
+
+            <Section1SupplierInfo
+              supplierName={supplierName}
+              setSupplierName={setSupplierName}
+              supplierTrn={supplierTrn}
+              setSupplierTrn={setSupplierTrn}
+              projectName={projectName}
+              setProjectName={setProjectName}
+              lpoNoInput={lpoNoInput}
+              setLpoNoInput={setLpoNoInput}
+              dbSuppliers={dbSuppliers}
+              handleSupplierSelect={handleSupplierSelect}
+              onNext={() => { if (validateSection1()) setActiveStep(1); }}
+            />
+          </Stack>
         )}
         
         {activeStep === 1 && (
