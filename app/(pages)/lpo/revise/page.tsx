@@ -21,7 +21,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconArrowLeft, IconAlertCircle } from '@tabler/icons-react';
 import { doc, getDoc, updateDoc, collection, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { RequestItem, LpoData, SupplierDbItem, AluDbInfo } from '../create/types';
+import { RequestItem, LpoData, SupplierDbItem, AluDbInfo } from '@/app/(pages)/lpo/types';
 import { Section1SupplierInfo, Section2ItemsPricing, Section3ReviewSummary } from '@/components/LpoSteps';
 
 function LpoReviseContent() {
