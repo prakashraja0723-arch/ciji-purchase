@@ -4,7 +4,7 @@ export type UserRole = 'admin' | 'procurement' | 'storekeeper' | 'engineer';
 
 export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   admin: ['*'], // Full control to all routes
-  procurement: ['dashboard', 'lpo', 'inventory', 'suppliers'],
+  procurement: ['dashboard', 'requests','lpo', 'inventory', 'suppliers'],
   storekeeper: ['dashboard', 'requests', 'inventory', 'goods-receipts'],
   engineer: ['dashboard', 'requests', 'inventory', 'goods-receipts', 'aluminum'],
 };
