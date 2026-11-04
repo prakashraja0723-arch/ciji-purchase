@@ -66,7 +66,7 @@ export function Navbar() {
 	// Role-based visibility check function
 	const canSeeItem = (key: string) => {
 		if (userRole === 'admin') return true;
-		if (userRole === 'procurement') return ['dashboards', 'lpo', 'inventory', 'suppliers'].includes(key);
+		if (userRole === 'procurement') return ['dashboards','requests', 'lpo', 'inventory', 'suppliers'].includes(key);
 		if (userRole === 'storekeeper') return ['dashboards', 'requests', 'inventory', 'goods-receipts'].includes(key);
 		if (userRole === 'engineer') return ['dashboards', 'requests', 'inventory', 'goods-receipts', 'aluminum'].includes(key);
 		return false;
