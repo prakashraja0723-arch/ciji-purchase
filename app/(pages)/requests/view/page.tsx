@@ -25,7 +25,7 @@ interface RequestItem {
   itemType: 'Accessories' | 'Aluminum';
   itemName: string;
   qty: number;
-  qtyUnit?: string; // <-- Added qtyUnit field
+  unit?: string; // <-- Updated from qtyUnit to unit
   accCode?: string;
   code?: string;
   length?: number;
@@ -155,7 +155,7 @@ function ViewRequestContent() {
                   <Table.Th>Item Name</Table.Th>
                   <Table.Th>Details / Specs</Table.Th>
                   <Table.Th>Requested Qty</Table.Th>
-                  <Table.Th>Qty Unit</Table.Th>
+                  <Table.Th>Unit</Table.Th>
                   <Table.Th>Ordered Qty</Table.Th>
                   <Table.Th>Item Status</Table.Th>
                 </Table.Tr>
@@ -176,7 +176,7 @@ function ViewRequestContent() {
                     <Table.Td fw={700}>{item.qty}</Table.Td>
                     <Table.Td>
                       <Badge size="xs" variant="outline" color="gray">
-                        {item.qtyUnit || (item.itemType === 'Aluminum' ? 'Lengths' : 'PCS')}
+                        {item.unit || (item.itemType === 'Aluminum' ? 'Lengths' : 'PCS')}
                       </Badge>
                     </Table.Td>
                     <Table.Td fw={700} c="blue.6">
@@ -187,39 +187,4 @@ function ViewRequestContent() {
                         size="xs"
                         variant="light"
                         color={
-                          item.itemStatus === 'Received (Complete)'
-                            ? 'green'
-                            : item.itemStatus === 'Partially Received'
-                              ? 'orange'
-                              : requestData.status === 'Request'
-                                ? 'gray'
-                                : 'blue'
-                        }
-                      >
-                        {item.itemStatus || requestData.status}
-                      </Badge>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-          </Stack>
-        </Paper>
-      </Stack>
-    </Container>
-  );
-}
-
-export default function ViewRequestPage() {
-  return (
-    <Suspense
-      fallback={
-        <Center p="xl" style={{ height: '50vh' }}>
-          <Loader color="myColor" size="lg" />
-        </Center>
-      }
-    >
-      <ViewRequestContent />
-    </Suspense>
-  );
-}
+                          item.
