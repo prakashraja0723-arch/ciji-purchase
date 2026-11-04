@@ -187,4 +187,39 @@ function ViewRequestContent() {
                         size="xs"
                         variant="light"
                         color={
-                          item.
+                          item.itemStatus === 'Received (Complete)'
+                            ? 'green'
+                            : item.itemStatus === 'Partially Received'
+                              ? 'orange'
+                              : requestData.status === 'Request'
+                                ? 'gray'
+                                : 'blue'
+                        }
+                      >
+                        {item.itemStatus || requestData.status}
+                      </Badge>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Stack>
+        </Paper>
+      </Stack>
+    </Container>
+  );
+}
+
+export default function ViewRequestPage() {
+  return (
+    <Suspense
+      fallback={
+        <Center p="xl" style={{ height: '50vh' }}>
+          <Loader color="myColor" size="lg" />
+        </Center>
+      }
+    >
+      <ViewRequestContent />
+    </Suspense>
+  );
+}
