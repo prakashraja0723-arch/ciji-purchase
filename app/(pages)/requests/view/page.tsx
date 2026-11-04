@@ -25,6 +25,7 @@ interface RequestItem {
   itemType: 'Accessories' | 'Aluminum';
   itemName: string;
   qty: number;
+  category?: string; // <-- Added category property from DB
   accCode?: string;
   code?: string;
   length?: number;
@@ -38,7 +39,7 @@ interface FirestoreRequest {
   materialRequestNo: string;
   projectName: string;
   storekeeperUid: string;
-  purchaserUid?: string | null; // <-- Ensure this property is accepted
+  purchaserUid?: string | null;
   status: string;
   requestType: 'Accessories' | 'Aluminum';
   lpoNo?: string;
@@ -152,6 +153,7 @@ function ViewRequestContent() {
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Item Name</Table.Th>
+                  <Table.Th>Category</Table.Th>
                   <Table.Th>Details / Specs</Table.Th>
                   <Table.Th>Requested Qty</Table.Th>
                   <Table.Th>Ordered Qty</Table.Th>
@@ -162,6 +164,11 @@ function ViewRequestContent() {
                 {requestData.items.map((item, idx) => (
                   <Table.Tr key={idx}>
                     <Table.Td fw={500}>{item.itemName}</Table.Td>
+                    <Table.Td>
+                      <Badge size="xs" variant="outline" color="gray">
+                        {item.category || item.itemType}
+                      </Badge>
+                    </Table.Td>
                     <Table.Td>
                       <Text size="xs" c="dimmed">
                         {item.itemType === 'Accessories' ? (
@@ -183,10 +190,10 @@ function ViewRequestContent() {
                           item.itemStatus === 'Received (Complete)'
                             ? 'green'
                             : item.itemStatus === 'Partially Received'
-                              ? 'orange'
-                              : requestData.status === 'Request'
-                                ? 'gray'
-                                : 'blue'
+                            ? 'orange'
+                            : requestData.status === 'Request'
+                            ? 'gray'
+                            : 'blue'
                         }
                       >
                         {item.itemStatus || requestData.status}
